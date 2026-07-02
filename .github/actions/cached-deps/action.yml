@@ -5,6 +5,10 @@ inputs: # defines the input parameters this action accepts — like function arg
             description: Whether to cache dependecies or not. # explains what this input does — shown in the marketplace and to users
             required: false # this input is optional — the action won't fail if the caller doesn't pass it
             default: 'true' # if the caller doesn't pass a value, it defaults to 'true' — always a string in inputs, even if it looks like a boolean
+outputs:
+    used-cache-anyname:
+               description: Whether the cache was used        
+               value: ${{steps.install-deps.outputs.cache}}
 runs:  #defines how the action executes — required in every action.yml
     using: composite # tells GitHub this is a composite action (runs multiple steps, not a Docker or JS action)
     steps: 
@@ -16,7 +20,11 @@ runs:  #defines how the action executes — required in every action.yml
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        id: install-deps
         if: steps.cache.outputs.cache-hit != 'true' || inputs.caching-anyname != 'true' #if there is no cache OR input is not true 
                                                                                         # run npm ci
-        run: npm ci
+        run: |
+          npm ci
+          echo "cache ='${{inputs.caching-anyname}}'" >> $GITHUB_OUTPUT
+
         shell: bash # required in composite actions — regular workflows inherit shell, composite actions do not
