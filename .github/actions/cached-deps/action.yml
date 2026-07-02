@@ -1,15 +1,22 @@
 name: Getting & Caching Dependencies # display name shown in GitHub Actions UI and marketplace
 description: Get the dependencies (via npm) and cache them. # explains what this action does — shown in marketplace and when used as a dependency
+inputs: # defines the input parameters this action accepts — like function arguments
+    caching-anyname: # the input name — referenced in steps as ${{ inputs.caching-anyname }}
+            description: Whether to cache dependecies or not. # explains what this input does — shown in the marketplace and to users
+            required: false # this input is optional — the action won't fail if the caller doesn't pass it
+            default: 'true' # if the caller doesn't pass a value, it defaults to 'true' — always a string in inputs, even if it looks like a boolean
 runs:  #defines how the action executes — required in every action.yml
     using: composite # tells GitHub this is a composite action (runs multiple steps, not a Docker or JS action)
     steps: 
       - name: Cache dependencies
+        if: inputs.caching-anyname == 'true' # validatation logic for the input. If false the step will be skipped  
         id: cache
         uses: actions/cache@v6
         with:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true' || inputs.caching-anyname != 'true' #if there is no cache OR input is not true 
+                                                                                        # run npm ci
         run: npm ci
         shell: bash # required in composite actions — regular workflows inherit shell, composite actions do not

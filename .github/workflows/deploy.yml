@@ -9,7 +9,9 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v6
-      - name: load & cache dependencies
+      - name: load & cache dependencie
+        with: # map input parameters of the action
+          caching-anyname: 'false'
         uses: ./.github/actions/cached-deps #digitalPavel/my-action if i have stand-alone repo with actions 
       - name: Lint code
         run: npm run lint
