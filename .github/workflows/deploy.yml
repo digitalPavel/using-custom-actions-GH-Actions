@@ -10,7 +10,7 @@ jobs:
       - name: Get code
         uses: actions/checkout@v6
       - name: load & cache dependencies
-        uses: ./.github/actions/cached-deps #digitalPavel/my-action if i have stand-alone repo with actions 
+        uses: ./.github/workflows/actions/cached-deps #digitalPavel/my-action if i have stand-alone repo with actions 
       - name: Lint code
         run: npm run lint
   test:
