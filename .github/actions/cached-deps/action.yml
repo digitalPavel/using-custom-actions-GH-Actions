@@ -25,6 +25,6 @@ runs:  #defines how the action executes — required in every action.yml
                                                                                         # run npm ci
         run: |
           npm ci
-          echo "cache ='${{inputs.caching-anyname}}'" >> $GITHUB_OUTPUT
+          echo "cache =${{inputs.caching-anyname}}" >> $GITHUB_OUTPUT
 
         shell: bash # required in composite actions — regular workflows inherit shell, composite actions do not
