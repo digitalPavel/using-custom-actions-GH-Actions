@@ -11,9 +11,9 @@ jobs:
         uses: actions/checkout@v6
       - name: load & cache dependencie
         id: cache-deps
+        uses: ./.github/actions/cached-deps #digitalPavel/my-action if i have stand-alone repo with actions 
         with: # map input parameters of the action
           caching-anyname: 'false'
-        uses: ./.github/actions/cached-deps #digitalPavel/my-action if i have stand-alone repo with actions 
       - name: Print output
         run: echo "Print cache ${{steps.cache-deps.outputs.used-cache-anyname}}"
       - name: Lint code
